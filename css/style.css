@@ -1,0 +1,29 @@
+:root {
+    --bg: #f6f3ec;
+    --surface: #ffffff;
+    --line: #D9D4C7;
+    --text: #1F2430;
+    --muted: #5B6170;
+    --primary: #2B3A67;
+    --primary-dark: #212d52;
+    --accent: #B7791F;
+
+    --space-1: 0.5rem;
+    --space-2: 1rem;
+    --space-3: 1.5rem;
+    --space-4: 2rem;
+    --space-6: 3rem;
+
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-heading: "Source Serif 4", Georgia, serif;
+
+    --text-sm: 0.888rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.5rem;
+    --text-2xl: 2rem;
+
+    --radius: 4px;
+    --control: 2.5rem;
+}
+
