@@ -46,5 +46,130 @@ body {
     background: var(--bg);
     color: var(--text);
     font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.5rem;
 }
 
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+}
+
+h1 { font-size: var(--text-2xl); line-height: 2.5rem;}
+h2 { font-size: var(--text-xl); line-height: 2rem;}
+h3 { font-size: var(--text-lg); line-height: 1.75rem;}
+
+button, input {
+    font: inherit;
+}
+
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.container {
+    width: min(100% - 3rem, 60rem);
+    margin-inline: auto;
+    padding-block: var(--space-6);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-3);
+}
+
+.span-5 { grid-column: span 5;}
+.span-7 { grid-column: span 7;}
+
+@media (max-width: 48rem) {
+    .grid > * {grid-column: 1 / -1;}
+}
+
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.stack--lg { gap: var(--space-4);}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var((--line));
+    border-radius: var(--radius);
+    padding: var(--space-3);
+}
+
+.label {
+    display: block;
+    margin-bottom: var(--space-1);
+    font-size: var(--text-sm);
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.input {
+    width: 100%;
+    height: var(--control);
+    padding: 0 var(--space-2);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+
+.input::placeholder { color: var(--muted);}
+.input:focus-visible { border-color: var(--primary);}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--control);
+    padding: 0 var(--space-2);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.btn--primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--surface);
+}
+
+.btn--primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn--secondary {
+    background: var(--surface);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn--secondary:hover { background: var(--bg);}
+
+.btn--ghost { color: var(--muted);}
+
+.btn--ghost:hover {
+    background: var(--bg);
+    color: var(--text);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
