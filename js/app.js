@@ -1,7 +1,8 @@
 const STORAGE_KEY = "study-cabin-tasks";
-const FOCUS_SECONDS = 25 * 60;
-const BREAK_SECONDS = 5 * 60;
-const ARC_length = Math.PI * 90;
+//to test it change the focus and break to 5.
+const FOCUS_SECONDS = 5;
+const BREAK_SECONDS = 5;
+const ARC_LENGTH = Math.PI * 90;
 
 let tasks = [];
 let remaining = FOCUS_SECONDS;
@@ -134,26 +135,28 @@ function startTimer() {
         remaining--;
         drawTimer();
 
-        if (remaining <= 0) {
+        if (mode === "break" && remaining <= 0) {
             PauseTimer();
-
-            if (mode === "focus") {
-                sessions++;
-                document.getElementById("sessions").textContent = sessions;
-                document.getElementById("status").textContent = "Focus done.Take 5 minute break.";
-            } else {
-                document.getElementById("status").textContent = "break over. BACK to focus";
-            }
+            document.getElementById("status").textContent = "Break over, GET back to focus"
             switchMode();
         }
     }, 1000);
-    document.getElementById("toggle").textContent = "Pause";
+    updateToggleLabel();
+}
+
+function finishFocus() {
+    PauseTimer();
+    sessions++;
+    document.getElementById("sessions").textContent = sessions;
+    switchMode();
+    startTimer();
+    document.getElementById("status").textContent = "Focus session saved. Go touch grass."
 }
 
 function PauseTimer() {
     clearInterval(intervalid);
     intervalid = null;
-    document.getElementById("toggle").textContent = "start";
+    updateToggleLabel();
 }
 
 function resetTimer() {
@@ -163,7 +166,13 @@ function resetTimer() {
 }
 
 document.getElementById("toggle").addEventListener("click", () => {
-    intervalid ? PauseTimer() : startTimer();
+    if (intervalid === null) {
+        startTimer();
+    } else if (mode === "focus" && remaining < 0) {
+        finishFocus();
+    } else {
+        PauseTimer();
+    }
 });
 
 document.getElementById("reset").addEventListener("click", resetTimer);
@@ -187,6 +196,8 @@ function switchMode() {
     phase.textContent = mode === "break"
     ? "Break"
     : "Focus block"
+
+    breakBanner.hidden = mode !== "break";
 
     drawTimer();
 }
