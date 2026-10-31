@@ -1,18 +1,17 @@
+const STORAGE_KEY = "study-cabin-tasks";
+const FOCUS_SECONDS = 25 * 60;
+const BREAK_SECONDS = 5 * 60;
+const ARC_length = Math.PI * 90;
+
 let tasks = [];
 let remaining = FOCUS_SECONDS;
 let intervalid = null;
 let sessions = 0;
 let mode = "focus";
 
-
-//uhh
-const STORAGE_KEY = "study-cabin-tasks";
-const FOCUS_SECONDS = 25 * 60;
-const BREAK_SECONDS = 5 * 60;
-const ARC_length = Math.PI * 90;
 const phase = document.getElementById("phase");
-
-
+const breakBanner = document.getElementById("break-banner");
+const arcFill = document.getElementById("arc-fill");
 function saveTasks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 }
@@ -85,13 +84,48 @@ document.getElementById("task-form").addEventListener("submit", (event) => {
 });
 
 function formatTime(seconds) {
-    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
-    const s = String(seconds % 60).padStart(2, "0");
-    return `${m}:${s}`;
+    const sign = seconds < 0 ? "+" : "";
+    const abs = Math.abs(seconds);
+    const m = String(Math.floor(abs / 60)).padStart(2, "0");
+
+    const s = String(abs % 60).padStart(2, "0");
+    return `${sign}${m}:${s}`;
 }
 
 function drawTimer() {
     document.getElementById("timer").textContent = formatTime(remaining);
+    drawArc();
+    updateToggleLabel();
+}
+
+function drawArc() {
+    const total = mode === "break" ? BREAK_SECONDS : FOCUS_SECONDS;
+    let elapsed;
+
+    if (mode === "break") {
+        elapsed = BREAK_SECONDS - remaining;
+    } else if (remaining >= 0) {
+        elapsed = FOCUS_SECONDS - remaining;
+    } else {
+        elapsed = (-remaining) % FOCUS_SECONDS;
+    }
+
+    const fill = Math.min(elapsed / total, 1);
+    arcFill.setAttribute("stroke-dasharray", ARC_LENGTH);
+    arcFill.setAttribute("stroke-dashoffset", ARC_LENGTH * (1- fill));
+    arcFill.classList.toggle("arc__fill--over", mode === "focus" && remaining < 0);
+}
+
+function updateToggleLabel() {
+    const toggle = document.getElementById("toggle");
+
+    if (intervalid === null) {
+        toggle.textContent = "start";
+    } else if (mode === "focus" && remaining < 0) {
+        toggle.textContent = "Stop and break";
+    } else {
+        toggle.textContent = "pause";
+    }
 }
 
 function startTimer() {
