@@ -294,3 +294,22 @@ button, input {
     justify-content: center;
     gap: var(--space-1);
 }
+
+.timer-options {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--space-3);
+}
+
+.timer-options select,
+.timer-options button {
+    font: inherit;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+}

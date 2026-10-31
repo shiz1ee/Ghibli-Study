@@ -1,15 +1,22 @@
 const STORAGE_KEY = "study-cabin-tasks";
 //to test it change the focus and break to 5.
-const FOCUS_SECONDS = 5;
-const BREAK_SECONDS = 5;
+const FOCUS_SECONDS = 2;
 const ARC_LENGTH = Math.PI * 90;
+const LONG_BREAK_SECONDS = 15 * 60;
+const LONG_BREAK_EVERY = 4;
 
 let tasks = [];
 let remaining = FOCUS_SECONDS;
 let intervalid = null;
 let sessions = 0;
 let mode = "focus";
+let breakSeconds = Number(localStorage.getItem('studycabin-break')) ||300;
+let currentBreak = breakSeconds;
+let soundOn = localStorage.getItem('studycabin-sound') !== 'off';
+let audioCtx = null;
 
+const breakSelect = document.getElementById('break-length');
+const soundToggle = document.getElementById('sound-toggle');
 const phase = document.getElementById("phase");
 const breakBanner = document.getElementById("break-banner");
 const arcFill = document.getElementById("arc-fill");
@@ -100,11 +107,11 @@ function drawTimer() {
 }
 
 function drawArc() {
-    const total = mode === "break" ? BREAK_SECONDS : FOCUS_SECONDS;
+    const total = mode === "break" ? currentBreak : FOCUS_SECONDS;
     let elapsed;
 
     if (mode === "break") {
-        elapsed = BREAK_SECONDS - remaining;
+        elapsed = currentBreak - remaining;
     } else if (remaining >= 0) {
         elapsed = FOCUS_SECONDS - remaining;
     } else {
@@ -135,6 +142,10 @@ function startTimer() {
         remaining--;
         drawTimer();
 
+        if (mode === "focus" && remaining ===0) {
+            playAlert();
+        }
+
         if (mode === "break" && remaining <= 0) {
             PauseTimer();
             document.getElementById("status").textContent = "Break over, GET back to focus"
@@ -146,11 +157,26 @@ function startTimer() {
 
 function finishFocus() {
     PauseTimer();
-    sessions++;
-    document.getElementById("sessions").textContent = sessions;
-    switchMode();
+
+    sessions += 1;
+
+    playChime();
+
+    const isLong = sessions % LONG_BREAK_EVERY === 0;
+
+    mode = 'break';
+    currentBreak = isLong ? LONG_BREAK_SECONDS : breakSeconds;
+    remaining = currentBreak;
+    
+    phase.textContent = isLong ? 'Long break' : 'Break';
+    breakBanner.textContent =
+        isLong
+        ? 'Long break. Step away for 15 minutes.'
+        : 'Break time. Step away for a few minutes.';
+    breakBanner.hidden = false;
+
+    drawTimer();
     startTimer();
-    document.getElementById("status").textContent = "Focus session saved. Go touch grass."
 }
 
 function PauseTimer() {
@@ -161,7 +187,11 @@ function PauseTimer() {
 
 function resetTimer() {
     PauseTimer();
-    remaining = mode === "break" ? BREAK_SECONDS : FOCUS_SECONDS;
+    mode = "focus";
+    remaining = FOCUS_SECONDS;
+
+    phase.textContent = "Focus block";
+    breakBanner.hidden = true;
     drawTimer();
 }
 
@@ -190,7 +220,7 @@ function switchMode() {
     }
 
     remaining = mode === "break"
-    ? BREAK_SECONDS
+    ? currentBreak
     : FOCUS_SECONDS;
 
     phase.textContent = mode === "break"
@@ -211,10 +241,85 @@ function applyTheme(theme) {
     localStorage.setItem(THEME_KEY, theme);
 }
 
+
+
 themeToggle.addEventListener("click", () => {
     const current = document.documentElement.dataset.theme;
-    applyTheme(current === "dark" ? "lignt" : "dark");
+    applyTheme(current === "dark" ? "light" : "dark");
 });
 
 applyTheme(localStorage.getItem(THEME_KEY) || "light");
 
+function playChime() {
+    if (!soundOn) return;
+
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.AudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+
+    const now = audioCtx.currentTime;
+
+    [523.25, 659.25, 783.99].forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const start = now + i * 0.25;
+
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.2, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.8);
+
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(start);
+        osc.stop(start + 0.8);
+    });
+}
+
+function updateSoundLabel() {
+    soundToggle.textContent = soundOn ? 'Sound on' : 'Sound off';
+    soundToggle.setAttribute('aria-pressed', String(soundOn));
+}
+
+soundToggle.addEventListener('click',() => {
+    soundOn = !soundOn;
+    localStorage.setItem('studycabin-sound', soundOn ? 'on' : 'off');
+    updateSoundLabel();
+});
+breakSelect.value = String(breakSeconds);
+breakSelect.addEventListener('change', () => {
+    breakSeconds = Number(breakSelect.value);
+    localStorage.setItem('studycabin-break', String(breakSeconds));
+});
+
+updateSoundLabel();
+
+function playAlert() {
+    if (!soundOn) return;
+
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.AudioContext)(); 
+    }
+    if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+    }
+
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(1400, now);
+    osc.frequency.exponentialRampToValueAtTime(600, now +0.25);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.15, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(start + 0.3);
+}
