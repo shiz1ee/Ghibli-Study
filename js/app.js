@@ -1,14 +1,17 @@
-const STORAGE_KEY = "study-cabin-tasks";
-const FOCUS_SECONDS = 25 * 60;
-
 let tasks = [];
 let remaining = FOCUS_SECONDS;
 let intervalid = null;
 let sessions = 0;
-
-const BREAK_SECONDS = 5 * 60;
 let mode = "focus";
+
+
+//uhh
+const STORAGE_KEY = "study-cabin-tasks";
+const FOCUS_SECONDS = 25 * 60;
+const BREAK_SECONDS = 5 * 60;
+const ARC_length = Math.PI * 90;
 const phase = document.getElementById("phase");
+
 
 function saveTasks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
@@ -65,14 +68,14 @@ function updateProgress() {
     const percent = total ? Math.round((done / total) * 100) : 0;
 
     document.getElementById("progress-fill").style.width = percent + "%";
-    document.getElementById("progress-text").textcontext = `${done} of ${total} done`;
+    document.getElementById("progress-text").textContext = `${done} of ${total} done`;
     document.getElementById("empty-state").hidden = total > 0;
 }
 
 document.getElementById("task-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const input = document.getElementById("task-input");
-    const text = input.ariaValueMax.trim();
+    const text = input.value.trim();
     if (!text) return;
 
     tasks.push({ text, done: false });
@@ -143,7 +146,7 @@ function switchMode() {
         mode = "focus";
     }
 
-    remaining = mode === "reak"
+    remaining = mode === "break"
     ? BREAK_SECONDS
     : FOCUS_SECONDS;
 
