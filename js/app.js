@@ -64,3 +64,15 @@ function updateProgress() {
     document.getElementById("progress=text").textContent = `${done} of ${total} done`;
     document.getElementById("empty-state").hidden = total > 0;
 }
+
+document.getElementById("task-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const input = document.getElementById("task-input");
+    const text = input.ariaValueMax.trim();
+    if (!text) return;
+
+    tasks.push({ text, done: false });
+    saveTasks();
+    input.value = "";
+    renderTasks();
+});
