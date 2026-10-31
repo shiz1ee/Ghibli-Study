@@ -7,6 +7,7 @@
     --primary: #4f7a5a;
     --primary-dark: #3e130d;
     --accent: #c9865a;
+    --pumpkin: #e07a1f;
 
     --space-1: 0.5rem;
     --space-2: 1rem;
@@ -209,9 +210,50 @@ button, input {
 
 .timer {
     font-family: var(--font-heading);
-    font-size: 3.5rem;
+    font-size: 2.5rem;
+    line-height: 1;
     text-align: center;
     font-variant-numeric: tabular-nums;
+}
+
+.timer-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.arc {
+    width: 11rem;
+    height: auto;
+}
+
+.arc__track,
+.arc__fill {
+    fill: none;
+    stroke-width: 8;
+}
+
+.arc__track {
+    stroke: var(--line);
+}
+
+.arc__fill {
+    stroke: var(--pumpkin);
+}
+
+.arc__fill--over {
+    stroke: var(--primary);
+}
+
+.break-banner {
+    width: 100%;
+    padding: var(--space-1) var(--space-2);
+    text-align: center;
+    color: var(--text);
+    background:  rgba(224, 122, 31, 0.18);
+    border: 1px solid var(--pumpkin);
+    border-radius: var(--radius);
 }
 
 .timer-controls {

@@ -1,10 +1,14 @@
 const STORAGE_KEY = "study-cabin-tasks";
-const FOCUS_SECONDS = 25* 60;
+const FOCUS_SECONDS = 25 * 60;
 
 let tasks = [];
 let remaining = FOCUS_SECONDS;
 let intervalid = null;
 let sessions = 0;
+
+const BREAK_SECONDS = 5 * 60;
+let mode = "focus";
+const phase = document.getElementById("phase");
 
 function saveTasks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
@@ -92,13 +96,18 @@ function startTimer() {
     intervalid = setInterval(() => {
         remaining--;
         drawTimer();
+
         if (remaining <= 0) {
             PauseTimer();
-            sessions++;
-            document.getElementById("sessions").textContent = sessions;
-            remaining = FOCUS_SECONDS;
-            drawTimer();
-            document.getElementById("status").textContent = "Session Complete. Take a short break"
+
+            if (mode === "focus") {
+                sessions++;
+                document.getElementById("sessions").textContent = sessions;
+                document.getElementById("status").textContent = "Focus done.Take 5 minute break.";
+            } else {
+                document.getElementById("status").textContent = "break over. BACK to focus";
+            }
+            switchMode();
         }
     }, 1000);
     document.getElementById("toggle").textContent = "Pause";
@@ -112,7 +121,7 @@ function PauseTimer() {
 
 function resetTimer() {
     PauseTimer();
-    remaining = FOCUS_SECONDS;
+    remaining = mode === "break" ? BREAK_SECONDS : FOCUS_SECONDS;
     drawTimer();
 }
 
@@ -125,3 +134,22 @@ document.getElementById("reset").addEventListener("click", resetTimer);
 tasks = loadTasks();
 renderTasks();
 drawTimer();
+
+//adding a 5 mins break rule 
+function switchMode() {
+    if (mode === "focus") {
+        mode = "break";
+    } else {
+        mode = "focus";
+    }
+
+    remaining = mode === "reak"
+    ? BREAK_SECONDS
+    : FOCUS_SECONDS;
+
+    phase.textContent = mode === "break"
+    ? "Break"
+    : "Focus block"
+
+    drawTimer();
+}

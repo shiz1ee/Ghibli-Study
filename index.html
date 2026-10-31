@@ -43,13 +43,27 @@
             <aside class="card span-5 stack" aria-labelledby="timer-heading">
                 <h2 id="timer-heading">Study timer</h2>
                 <p class="muted" id="phase">Focus block</p>
-                <div class="timer" id="timer" aria-live="off">25:00</div>
+
+                <div class="break-banner" id="break-banner" hidden>
+                    Break time. touch grass for 5 minutes.
+                </div>
+
+                <div class="timer-wrap">
+                    <svg class="arc" viewBox-" 0 0 200 100" aria-hidden=""true>
+                        <path class="arc__track" d="M 190 100 A 90 90 0 0 0 10 100"/>
+                        <path class="arc__fill" id="arc-fill" d="M 190 100 A 90 90 0 0 0 10 100"/>
+                    </svg>
+                    <div class="timer" id="timer">25:00</div>
+                </div>
+
                 <div class="timer-controls">
                     <button class="btn btn--primary" id="toggle" type="button">Start</button>
                     <button class="btn btn--secondary" id="reset" type="button">Reset</button>
                 </div>
+
                 <p class="muted">Sessions completed: <span id="sessions">0</span></p>
-                <p class="muted" id="status" role="status"></p> 
+                <p class="muted" id="status" role="status"></p>
+                 
             </aside>
         </div>
     </main>
