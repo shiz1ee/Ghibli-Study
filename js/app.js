@@ -76,3 +76,42 @@ document.getElementById("task-form").addEventListener("submit", (event) => {
     input.value = "";
     renderTasks();
 });
+
+function formatTime(seconds) {
+    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    return `${m}:${s}`;
+}
+
+function drawTimer() {
+    document.getElementById("timer").textContent = formatTime(remaining);
+}
+
+function startTimer() {
+    if (intervalid) return;
+    intervalid = setInterval(() => {
+        remaining--;
+        drawTimer();
+        if (remaining <= 0) {
+            PauseTimer();
+            sessions++;
+            document.getElementById("sessions").textContent = sessions;
+            remaining = FOCUS_SECONDS;
+            drawTimer();
+            document.getElementById("status").textContent = "Session Complete. Take a short break"
+        }
+    }, 1000);
+    document.getElementById("toggle").textContent = "Pause";
+}
+
+function PauseTimer() {
+    clearInterval(intervalid);
+    intervalid = null;
+    document.getElementById("toggle").textContent = "start";
+}
+
+function resetTimer() {
+    PauseTimer();
+    remaining = FOCUS_SECONDS;
+    drawTimer();
+}
