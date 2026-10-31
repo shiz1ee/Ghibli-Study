@@ -201,3 +201,20 @@ function switchMode() {
 
     drawTimer();
 }
+
+const THEME_KEY = "study-cabin-theme";
+const themeToggle = document.getElementById("theme-toggle");
+
+function applyTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    themeToggle.textContent = theme === "dark" ? "Light mode" : "Dark mode";
+    localStorage.setItem(THEME_KEY, theme);
+}
+
+themeToggle.addEventListener("click", () => {
+    const current = document.documentElement.dataset.theme;
+    applyTheme(current === "dark" ? "lignt" : "dark");
+});
+
+applyTheme(localStorage.getItem(THEME_KEY) || "light");
+
