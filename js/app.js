@@ -61,7 +61,7 @@ function updateProgress() {
     const percent = total ? Math.round((done / total) * 100) : 0;
 
     document.getElementById("progress-fill").style.width = percent + "%";
-    document.getElementById("progress=text").textContent = `${done} of ${total} done`;
+    document.getElementById("progress-text").textcontext = `${done} of ${total} done`;
     document.getElementById("empty-state").hidden = total > 0;
 }
 
@@ -115,3 +115,13 @@ function resetTimer() {
     remaining = FOCUS_SECONDS;
     drawTimer();
 }
+
+document.getElementById("toggle").addEventListener("click", () => {
+    intervalid ? PauseTimer() : startTimer();
+});
+
+document.getElementById("reset").addEventListener("click", resetTimer);
+
+tasks = loadTasks();
+renderTasks();
+drawTimer();
