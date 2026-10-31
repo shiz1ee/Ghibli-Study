@@ -44,11 +44,13 @@ ul {
 }
 
 body {
+    body {
     background: var(--bg);
     color: var(--text);
     font-family: var(--font-body);
     font-size: var(--text-base);
     line-height: 1.5rem;
+}
 }
 
 h1, h2, h3 {
@@ -224,14 +226,19 @@ button, input {
 }
 
 .arc {
-    width: 11rem;
+    display: block;
+    width: 13rem;
+    max-width: 100%;
     height: auto;
+    overflow: hidden;
+    margin: 0 auto;
 }
 
 .arc__track,
 .arc__fill {
     fill: none;
     stroke-width: 8;
+    stroke-linecap: round;
 }
 
 .arc__track {

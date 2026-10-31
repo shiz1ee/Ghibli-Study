@@ -68,7 +68,7 @@ function updateProgress() {
     const percent = total ? Math.round((done / total) * 100) : 0;
 
     document.getElementById("progress-fill").style.width = percent + "%";
-    document.getElementById("progress-text").textContext = `${done} of ${total} done`;
+    document.getElementById("progress-text").textContent = `${done} of ${total} done`;
     document.getElementById("empty-state").hidden = total > 0;
 }
 
