@@ -14,6 +14,7 @@ let breakSeconds = Number(localStorage.getItem('studycabin-break')) ||300;
 let currentBreak = breakSeconds;
 let soundOn = localStorage.getItem('studycabin-sound') !== 'off';
 let audioCtx = null;
+let dragIndex = null;
 
 const breakSelect = document.getElementById('break-length');
 const soundToggle = document.getElementById('sound-toggle');
@@ -62,9 +63,40 @@ function startEdit(index, textEl) {
     });
     input.addEventListener("blur", save);
 
-    textEl.replaceWidth(input);
+    textEl.replaceWith(input);
     input.focus();
     input.select();
+}
+
+function todayString() {
+    const d = new Date();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0")
+    return `${d.getFullYear()}-${m}-${day}`;
+}
+
+function buildMeta(task) {
+    const meta = document.createElement("span");
+    meta.className = "task__meta";
+
+    if (task.priority && task.priority !== "none") {
+        const tag = document.createElement("span");
+        tag.className = "tag tag--" + task.priority;
+        tag.textContent = task.priority;
+        meta.appendChild(tag);
+    }
+
+    if (task.due) {
+        const tag = document.createElement("span");
+        const overdue = !task.done && task.due < todayString();
+        tag.className = "tag" + (overdue ? " tag--overdue" : "");
+        const date = new Date(task.due + "T00:00:00");
+        const label = date.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+        tag.textContent = overdue ? "Overdue" + label : label;
+        meta.appendChild(tag);
+    }
+
+    return meta;
 }
 
 function renderTasks() {
@@ -87,6 +119,8 @@ function renderTasks() {
         const text = document.createElement("span");
         text.className = "task__text";
         text.textContent = task.text;
+        text.title = "Double-click to edit";
+        text.addEventListener("dblclick", () => startEdit(index, text));
 
         const del = document.createElement("button");
         del.className = "btn btn--ghost";
@@ -97,7 +131,50 @@ function renderTasks() {
             renderTasks();
         });
 
-        li.append(checkbox, text, del);
+        const handle = document.createElement("span");
+        handle.className = "task__handle";
+        handle.textContent = "::";
+        handle.title = "Drad to reorder ";
+        handle.draggable = true;
+
+        handle.addEventListener("dragstart", (event) => {
+            dragIndex = index;
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.setData(text/plain, String(index));
+            event.dataTransfer.setDragImage(li, 0, 0);
+        })
+
+        handle.addEventListener("dragend", () => {
+            dragIndex = null;
+            renderTasks();
+        })
+
+        li.addEventListener("dragover", (event) => {
+            if (dragIndex === null) return;
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "move";
+            li.classList.add("task--over");
+        });
+
+        li.addEventListener("dragleave", (event) => {
+            if (li.contains(event.relatedTarget)) {
+                li.classList.remove("task-over");
+            }
+        });
+
+        li.addEventListener("drop", (event) => {
+            event.preventDefault();
+            if (dragIndex === null || dragIndex === index) return;
+
+            const [moved] = tasks.splice(dragIndex, 1);
+            tasks.splice(index, 0, moved);
+            dragIndex = null;
+
+            saveTasks();
+            renderTasks();
+        })
+
+        li.append(handle, checkbox, text, buildMeta(task), del);
         list.appendChild(li);
     });
 
@@ -117,12 +194,16 @@ function updateProgress() {
 document.getElementById("task-form").addEventListener("submit", (event) => {
     event.preventDefault();
     const input = document.getElementById("task-input");
+    const priority = document.getElementById("task-priority");
+    const due = document.getElementById("task-due");
     const text = input.value.trim();
     if (!text) return;
 
-    tasks.push({ text, done: false });
+    tasks.push({ text, done: false, priority: priority.value, due: due.value });
     saveTasks();
     input.value = "";
+    priority.value = "none";
+    due.value = "";
     renderTasks();
 });
 

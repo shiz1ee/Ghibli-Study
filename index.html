@@ -28,6 +28,16 @@
                 <form id="task-form" class="row">
                     <input id="task-input" class="input" style="flex: 1;" placeholder="Read chapter 4 of the notes" aria-label="New task" autocomplete="off">
                     <button class="btn btn--primary" type="submit">Add task</button>
+
+                    <div class="task-extras">
+                        <select ariea-label="Priority" id="task-priority">
+                            <option value="none">No priority</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                        <input type="date" id="task-due" aria-label="Due date">
+                    </div>
                 </form>
 
                 <div class="stack">
