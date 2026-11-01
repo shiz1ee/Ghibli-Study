@@ -1,6 +1,6 @@
 const STORAGE_KEY = "study-cabin-tasks";
 //to test it change the focus and break to 5.
-const FOCUS_SECONDS = 2;
+const FOCUS_SECONDS = 25 * 60;
 const ARC_LENGTH = Math.PI * 90;
 const LONG_BREAK_SECONDS = 15 * 60;
 const LONG_BREAK_EVERY = 4;
@@ -440,3 +440,102 @@ function playAlert() {
     osc.start(now);
     osc.stop(start + 0.3);
 }
+
+const STICKER_KEY = "study-cabin-stickers";
+
+const STICKERS = [
+    { id: "s1", src: "img/stickers/st1.png", x:24, y: 140, w: 110},
+    { id: "s2", src: "img/stickers/st2.png", x:1100, y: 80, w: 120},
+    { id: "s3", src: "img/stickers/st3.png", x:1000, y: 560, w: 100},
+    { id: "s4", src: "img/stickers/st4.png", x: 900, y: 300, w: 130},
+];
+
+const stickerLayer = document.getElementById("sticker-layer");
+let stickerZ = 10;
+
+function loadStickerPositions() {
+    try {
+        return JSON.parse(localStorage.getItem(STICKER_KEY)) || {};
+    } catch {
+        return {};
+    }
+}
+
+let stickerPos = loadStickerPositions();
+
+function saveStickerPositions() {
+    localStorage.setItem(STICKER_KEY, JSON.stringify(stickerPos));
+}
+
+function clampSticker(img, x, y) {
+    const maxX = Math.max(0, window.innerWidth - img.offsetWidth);
+    const maxY = Math.max(0, window.innerHeight - img.offsetHeight);
+    return {
+        x: Math.min(Math.max(0, x), maxX),
+        y: Math.min(Math.max(0, y), maxY)
+    };
+}
+
+function makeSticker(data) {
+    const img = document.createElement("img");
+    img.className = "sticker";
+    img.src = data.src;
+    img.alt = "";
+    img.draggable = false;
+    img.style.width = data.w + "px";
+
+    const saved = stickerPos[data.id] || {x: data.x, y: data.y };
+    img.style.left = saved.x + "px";
+    img.style.top = saved.y + "px";
+
+    let dragging = false;
+    let offX = 0;
+    let offY = 0;
+
+    img.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        dragging = true;
+        offX = event.clientX - img.offsetLeft;
+        offY = event.clientY - img.offsetTop;
+        img.setPointerCapture(event.pointerId);
+        img.style.zIndex = ++stickerZ;
+        img.classList.add("sticker--drag");
+    });
+
+    img.addEventListener("pointermove", (event) => {
+        if (!dragging) return;
+
+        if (event.buttons === 0) {
+            endDrag();
+            return;
+        }
+        const pos = clampSticker(img, event.clientX - offX, event.clientY - offY);
+        img.style.left = pos.x + "px";
+        img.style.top = pos.y + "px";
+    });
+
+    function endDrag() {
+        if (!dragging) return;
+        dragging = false;
+        img.classList.remove("sticker--drag");
+        stickerPos[data.id] = { x: img.offsetLeft, y: img.offsetTop };
+        saveStickerPositions();
+    }
+
+    img.addEventListener("pointerup", endDrag);
+    img.addEventListener("pointercancel", endDrag);
+    img.addEventListener("lostpointercapture", endDrag);
+
+    stickerLayer.appendChild(img);
+}
+
+function keepStickerOnScreen() {
+    stickerLayer.querySelectorAll(".sticker").forEach((img) => {
+        const pos = clampSticker(img, img.offsetLeft, img.offsetTop);
+        img.style.left = pos.x + "px";
+        img.style.top = pos.y + "px";
+    });
+}
+
+STICKERS.forEach(makeSticker);
+window.addEventListener("resize", keepStickerOnScreen);

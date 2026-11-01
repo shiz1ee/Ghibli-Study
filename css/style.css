@@ -73,7 +73,7 @@ body {
     font-family: var(--font-body);
     font-size: var(--text-base);
     line-height: 1.5rem;
-    overflow: hidden;
+    
 }
 
 body::before {
@@ -449,4 +449,34 @@ button, input {
     flex: 1;
     min-width: 0;
     overflow-wrap: anywhere;
+}
+
+#sticker-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.sticker {
+    position: absolute;
+    height: auto;
+    pointer-events: auto;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    filter: 
+        drop-shadow(1px 0 0 #000)
+        drop-shadow(-1px 0 0 #000)
+        drop-shadow(0 1px 0 #000)
+        drop-shadow(0 -1px 0 #000)
+        drop-shadow(0 3px 4p rgba(0, 0, 0, 0.25));
+        transition: transform 0.12s;
+}
+
+.sticker--drag {
+    cursor: grabbing;
+    transform: scale(1.05) rotate(-2deg);
 }
