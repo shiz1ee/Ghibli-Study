@@ -480,3 +480,47 @@ button, input {
     cursor: grabbing;
     transform: scale(1.05) rotate(-2deg);
 }
+
+@media (max-width: 700px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .span-7,
+    .span-5 {
+        grid-column: 1 / -1;
+    }
+
+    .timer-card {
+        position: static;
+    }
+
+    #task-input {
+        flex: 1 1 100%;
+    }
+
+    .task {
+        flex-wrap: wrap;
+    }
+
+    .task__text {
+        flex: 1 1 10rem;
+        min-width: 10rem;
+    }
+
+    .task__handle {
+        display: none;
+    }
+
+    .task .btn--ghost {
+        margin-left: auto;
+    }
+
+    .timer-options {
+        flex-wrap: wrap;
+    }
+
+    #sticker-layer {
+        display: none;
+    }
+}
