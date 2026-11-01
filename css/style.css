@@ -71,6 +71,7 @@ body {
     font-family: var(--font-body);
     font-size: var(--text-base);
     line-height: 1.5rem;
+    overflow: hidden;
 }
 
 
@@ -138,6 +139,7 @@ button, input {
     border: 1px solid var(--line);
     border-radius: var(--radius);
     padding: var(--space-3);
+    
 }
 
 .label {
@@ -218,6 +220,7 @@ button, input {
     padding: var(--space-1) var(--space-2);
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    
 }
 
 .task--done .task__text {
@@ -362,4 +365,69 @@ button, input {
     background: var(--surface);
     color: var(--text);
     cursor: pointer;
+}
+
+.task__handle {
+    cursor: grab;
+    user-select: none;
+    padding: 0 var(--space-2);
+    opacity: 0.6;
+}
+
+.task__handle:active {
+    cursor: grabbing;
+}
+
+.task--over {
+    outline: 1px solid var(--primary);
+    outline-offset: -1px;
+}
+
+.timer-card {
+    align-self: start;
+    position: sticky;
+    top: var(--space-4);
+}
+
+#task-list {
+    max-height: 13rem;
+    overflow-y: auto;
+    padding-right: var(--space-2);
+    scrollbar-width: var(--line) transparent;
+}
+
+#task-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#task-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#task-list::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 4px;
+}
+
+#task-list::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+#task-form {
+    flex-wrap: wrap;
+}
+
+#task-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.task-extras {
+    flex-basis: 100%;
+}
+
+.task__text {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }

@@ -275,6 +275,7 @@ function finishFocus() {
     PauseTimer();
 
     sessions += 1;
+    document.getElementById("sessions").textContent = sessions;
 
     playChime();
 

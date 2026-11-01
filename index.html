@@ -26,11 +26,11 @@
                 <h2 id="tasks-heading">Tasks</h2>
                 
                 <form id="task-form" class="row">
-                    <input id="task-input" class="input" style="flex: 1;" placeholder="Read chapter 4 of the notes" aria-label="New task" autocomplete="off">
+                    <input id="task-input" class="input"  placeholder="Read chapter 4 of the notes" aria-label="New task" autocomplete="off">
                     <button class="btn btn--primary" type="submit">Add task</button>
 
                     <div class="task-extras">
-                        <select ariea-label="Priority" id="task-priority">
+                        <select aria-label="Priority" id="task-priority">
                             <option value="none">No priority</option>
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>
@@ -53,7 +53,7 @@
                 <p class="muted" id="empty-state">No tasks yet. Add one above.</p>
             </section>
 
-            <aside class="card span-5 stack" aria-labelledby="timer-heading">
+            <aside class="card span-5 stack timer-card" aria-labelledby="timer-heading">
                 <h2 id="timer-heading">Study timer</h2>
                 <p class="muted" id="phase">Focus block</p>
 
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="timer-wrap">
-                    <svg class="arc" viewBox-" 0 0 200 100" aria-hidden=""true>
+                    <svg class="arc" viewBox="0 0 200 100" aria-hidden="true">
                         <path class="arc__track" d="M 190 100 A 90 90 0 0 0 10 100"/>
                         <path class="arc__fill" id="arc-fill" d="M 190 100 A 90 90 0 0 0 10 100"/>
                     </svg>
