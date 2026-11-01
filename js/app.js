@@ -32,6 +32,41 @@ function loadTasks() {
     }
 }
 
+function startEdit(index, textEl) {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "task__edit";
+    input.value = tasks[index].text;
+    input.maxLength = 120;
+
+    let finished = false;
+
+    function save() {
+        if (finished) return;
+        finished = true;
+        const value = input.value.trim();
+        if (value) tasks[index].text = value;
+        saveTasks();
+        renderTasks();
+    }
+
+    function cancel() {
+        if (finished) return;
+        finished = true;
+        renderTasks();
+    }
+
+    input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") save();
+        else if (event.key === "Escape") cancel();
+    });
+    input.addEventListener("blur", save);
+
+    textEl.replaceWidth(input);
+    input.focus();
+    input.select();
+}
+
 function renderTasks() {
     const list = document.getElementById("task-list");
     list.innerHTML = "";
