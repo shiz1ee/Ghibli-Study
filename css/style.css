@@ -10,6 +10,7 @@
     --accent: #c9865a;
     --pumpkin: #e07a1f;
     --danger: #450011;
+    --bg-tint: rgba(220, 232, 213, 0.35);
 
     --scene: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'%3E%3Crect width='1600' height='900' fill='%23DCE8D5'/%3E%3Ccircle cx='1280' cy='190' r='90' fill='%23F4E9C8'/%3E%3Cellipse cx='380' cy='170' rx='160' ry='38' fill='%23FBF8EF'/%3E%3Cellipse cx='1000' cy='120' rx='130' ry='30' fill='%23FBF8EF'/%3E%3Cpath d='M0 560Q320 430 640 540T1280 520T1600 500V900H0Z' fill='%23B7D3B0'/%3E%3Cpath d='M0 680Q400 580 800 670T1600 640V900H0Z' fill='%234F7A5A'/%3E%3C/svg%3E");
 
@@ -42,6 +43,7 @@
     --primary-dark: #9CCAAA;
     --on-primary: #141C18;
     --danger: #32000c;
+    --bg-tint: rgba(20, 28, 24, 0.7);
 
     --scene: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'%3E%3Crect width='1600' height='900' fill='%231B2620'/%3E%3Ccircle cx='1280' cy='190' r='80' fill='%233A4D42'/%3E%3Cpath d='M0 560Q320 430 640 540T1280 520T1600 500V900H0Z' fill='%232A3A30'/%3E%3Cpath d='M0 680Q400 580 800 670T1600 640V900H0Z' fill='%23161F1A'/%3E%3C/svg%3E");
 }
@@ -63,7 +65,7 @@ ul {
 
 body {
     background-color: var(--bg);
-    background-image: var(--scene);
+    background: var(--bg);
     background-size: cover;
     background-position: center bottom;
     background-attachment: fixed;
@@ -72,6 +74,23 @@ body {
     font-size: var(--text-base);
     line-height: 1.5rem;
     overflow: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: -20px;
+    z-index: -2;
+    background: url("../img/ghibli.jpg") center / cover no-repeat;
+    filter: blur(6px);
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--bg-tint);
 }
 
 
