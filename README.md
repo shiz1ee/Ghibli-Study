@@ -2,9 +2,9 @@
 
 A cozy study timer and to-do list. it's a remake of Ghibli Study by Remy.
 
-[Demo]()
-
 ![homescreen](/img/s1.png)
+
+## Demo: [Study Cabin](https://study-cabin.vercel.app/)
 
 ## What I changed
 
