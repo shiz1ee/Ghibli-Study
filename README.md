@@ -2,9 +2,9 @@
 
 A cozy study timer and to-do list. it's a remake of Ghibli Study by Remy.
 
-[Demo]()
+![homescreen](/img/s1.png)
 
-[homescreen](/img/s1.png)
+## Demo: [Study Cabin](https://study-cabin.vercel.app/)
 
 ## What I changed
 
@@ -32,7 +32,7 @@ I split it into html, css and javascript, redid the look and added a bunch of st
 - custom favicon
 - I still wanted to keep the original Ghibli theme so i added these stickers and the background.
 
-[homescreen](/img/s2.png)
+![homescreen](/img/s2.png)
 
 
 ## Tech stack
